@@ -1,17 +1,20 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Cliente {
+public class Clientes implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private Integer id;
 	private String nome;
 	private String sobrenome;
-	private Integer telefone;
+	private String telefone;
 	
-	public Cliente() {}
+	public Clientes() {}
 
-	public Cliente(Integer id, String nome, String sobrenome, Integer telefone) {
+	public Clientes(Integer id, String nome, String sobrenome, String telefone) {
 		this.id = id;
 		this.nome = nome;
 		this.sobrenome = sobrenome;
@@ -42,14 +45,14 @@ public class Cliente {
 		this.sobrenome = sobrenome;
 	}
 
-	public Integer getTelefone() {
+	public String getTelefone() {
 		return telefone;
 	}
-
-	public void setTelefone(Integer telefone) {
+	
+	public void setTelefone(String telefone) {
 		this.telefone = telefone;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id, nome, sobrenome, telefone);
@@ -63,10 +66,17 @@ public class Cliente {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Cliente other = (Cliente) obj;
+		Clientes other = (Clientes) obj;
 		return Objects.equals(id, other.id) && Objects.equals(nome, other.nome)
 				&& Objects.equals(sobrenome, other.sobrenome) && Objects.equals(telefone, other.telefone);
 	}
-		
+
+	@Override
+	public String toString() {
+		return "Cliente [id=" + id + ", nome=" + nome + ", sobrenome=" + sobrenome + ", telefone=" + telefone + "]";
+	}
+
+
+	
 	
 }
