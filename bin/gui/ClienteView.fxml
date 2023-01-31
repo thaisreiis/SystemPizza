@@ -16,7 +16,7 @@
       </ToolBar>
       <ToolBar prefHeight="40.0" prefWidth="200.0">
          <items>
-            <TextField fx:id="txtPesquisar" prefHeight="25.0" prefWidth="427.0" promptText="pesquisar cliente" />
+            <TextField fx:id="txtPesquisar" prefHeight="25.0" prefWidth="537.0" promptText="pesquisar cliente" />
          </items>
       </ToolBar>
       <TableView fx:id="tableViewClientes" prefHeight="251.0" prefWidth="648.0">
@@ -25,6 +25,7 @@
           <TableColumn fx:id="tableColumnSobrenome" prefWidth="262.0" text="Sobrenome" />
             <TableColumn fx:id="tableColumnTelefone" prefWidth="101.0" text="Telefone" />
             <TableColumn fx:id="tableColumnEDIT" prefWidth="75.0" />
+            <TableColumn fx:id="tableColumnREMOVE" prefWidth="75.0" />
         </columns>
       </TableView>
    </children>

@@ -2,12 +2,11 @@ package gui;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
+import DB.DbIntegrityException;
 import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Utils;
@@ -22,7 +21,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -36,12 +37,9 @@ import service.ClientesService;
 
 public class ClientesController implements Initializable, DataChangeListener {
 
-	private Clientes clientes;
+	//private Clientes clientes;
 
-	private ClientesService service = new ClientesService(); // ISSO ESTA ERRADO. É UMA GAMBIARRA*** nao pode e nao sei
-																// arrumar cry
-																// precisa injetar atraves do set que por algum motivo N
-																// FUNCIONA aa
+	private ClientesService service = new ClientesService();
 
 	List<Clientes> list = service.findAll();
 
@@ -67,39 +65,37 @@ public class ClientesController implements Initializable, DataChangeListener {
 	private TableColumn<Clientes, Clientes> tableColumnEDIT;
 
 	@FXML
-	private TableColumn<Clientes, Clientes> tableColumnCANCEL;
+	private TableColumn<Clientes, Clientes> tableColumnREMOVE;
 
 	@FXML
 	private Button btNovoCliente;
 
-	@FXML
-	public void onBtPesquisarAction(ActionEvent event) {
-
-	}
+	private ObservableList<Clientes> obsList; // nesse obsList que vamos carregar os Clientes
 
 	@FXML
 	public void onBtNovoClienteAction(ActionEvent event) {
 		Stage parentStage = Utils.currentStage(event);
-		createDialogForm("/gui/CadastroCliente.fxml", parentStage);
+		Clientes obj = new Clientes();
+		createDialogForm(obj, "/gui/CadastroCliente.fxml", parentStage);
 	}
 
 	public void setClientesService(ClientesService service) {
 		this.service = service;
 	}
 
-	public void setClientes(Clientes clientes) {
-		this.clientes = clientes;
-	}
-
-	private ObservableList<Clientes> obsList; // nesse obsList que vamos carregar os Clientes
+	//public void setClientes(Clientes clientes) {
+	//	this.clientes = clientes;
+	//}
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		tableColumnNome.setCellValueFactory(new PropertyValueFactory<>("Nome"));
 		tableColumnSobrenome.setCellValueFactory(new PropertyValueFactory<>("Sobrenome"));
 		tableColumnTelefone.setCellValueFactory(new PropertyValueFactory<>("Telefone"));
+
 		updateTableView();
 		searchClientes();
+		
 	}
 
 	// Metodo responsavel por acessar o serviço, carregar os Clientes e e jogar
@@ -114,17 +110,21 @@ public class ClientesController implements Initializable, DataChangeListener {
 		List<Clientes> list = service.findAll();
 		obsList = FXCollections.observableArrayList(list);
 		tableViewClientes.setItems(obsList);
+		initEditButtons();
+		initRemoveButtons();
+		searchClientes();
 	}
 
-	private void createDialogForm(String absoluteName, Stage parentStage) {
+	private void createDialogForm(Clientes obj, String absoluteName, Stage parentStage) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			Pane pane = loader.load();
 
 			CadastroClienteController controller = loader.getController();
-			controller.setClientes(clientes);
+			controller.setClientes(obj);
 			controller.setClientesService(new ClientesService());
 			controller.subscribeDataChangeListener(this);
+			controller.updateFormData();
 			
 
 			Stage dialogStage = new Stage();
@@ -170,7 +170,6 @@ public class ClientesController implements Initializable, DataChangeListener {
 
 				return false; // Does not match.
 			});
-
 		});
 
 		// 3. Wrap the FilteredList in a SortedList.
@@ -182,6 +181,57 @@ public class ClientesController implements Initializable, DataChangeListener {
 		tableViewClientes.setItems(sortedData);
 	}
 
+	private void initEditButtons() {
+		tableColumnEDIT.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tableColumnEDIT.setCellFactory(param -> new TableCell<Clientes, Clientes>() {
+			private final Button button = new Button("Editar");
+
+			@Override
+			protected void updateItem(Clientes obj, boolean empty) {
+				super.updateItem(obj, empty);
+				if (obj == null) {
+					setGraphic(null);
+					return;
+				}
+				setGraphic(button);
+				button.setOnAction(
+						event -> createDialogForm(obj, "/gui/CadastroCliente.fxml", Utils.currentStage(event)));
+			}
+		});
+	}
 	
+	private void initRemoveButtons() {
+		tableColumnREMOVE.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tableColumnREMOVE.setCellFactory(param -> new TableCell<Clientes, Clientes>() {
+			private final Button button = new Button("Excluir");
+
+			@Override
+			protected void updateItem(Clientes obj, boolean empty) {
+				super.updateItem(obj, empty);
+				if (obj == null) {
+					setGraphic(null);
+					return;
+				}
+				setGraphic(button);
+				button.setOnAction(event -> removeEntity(obj));
+			}
+		});
+	}
+
+	private void removeEntity(Clientes obj) {
+		Optional<ButtonType> result = Alerts.showConfirmation("Confirmação", "Você tem certeza que deseja cancelar?");
+		
+		if (result.get() == ButtonType.OK) {
+			if (service == null) {
+				throw new IllegalStateException("Service está nulo!");
+			}
+			try {
+			service.remove(obj);
+			updateTableView();
+		} catch (DbIntegrityException e) {
+			Alerts.showAlert("Erro removendo objeto", null, e.getMessage(), AlertType.ERROR);
+		}
+		}
+	}
 
 }

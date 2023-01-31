@@ -10,37 +10,35 @@ import java.util.List;
 
 import DB.DB;
 import DB.DbException;
+import DB.DbIntegrityException;
 import model.Clientes;
 import model.dao.ClientesDao;
 
 public class ClientesDaoJDBC implements ClientesDao {
 
-	//Os dois codigos abaixo é para criar a conexao com o banco de dados só chamando o CONN:
-	
-	private Connection conn;	
-	
+	// Os dois codigos abaixo é para criar a conexao com o banco de dados só
+	// chamando o CONN:
+
+	private Connection conn;
+
 	public ClientesDaoJDBC(Connection conn) {
 		this.conn = conn;
 	}
-	
+
 	@Override
-	public void insert(Clientes obj) {		
+	public void insert(Clientes obj) {
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement(
-					"INSERT INTO clientes "
-					+ "(Nome, Sobrenome, Telefone) "
-					+ "VALUES "
-					+ "(?, ?, ?)",
+					"INSERT INTO clientes " + "(Nome, Sobrenome, Telefone) " + "VALUES " + "(?, ?, ?)",
 					Statement.RETURN_GENERATED_KEYS);
-			
+
 			st.setString(1, obj.getNome());
 			st.setString(2, obj.getSobrenome());
 			st.setString(3, obj.getTelefone());
-			
-			
+
 			int rowsAffected = st.executeUpdate();
-			
+
 			if (rowsAffected > 0) {
 				ResultSet rs = st.getGeneratedKeys();
 				if (rs.next()) {
@@ -48,35 +46,57 @@ public class ClientesDaoJDBC implements ClientesDao {
 					obj.setId(id);
 				}
 				DB.closeResultSet(rs);
-			}
-			else {
+			} else {
 				throw new DbException("Unexpected error! No rows affected!");
 			}
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
-		}
-		finally {
+		} finally {
 			DB.closeStatement(st);
 		}
 	}
 
 	@Override
 	public void update(Clientes obj) {
-		// TODO Auto-generated method stub
-		
+
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement(
+					"UPDATE clientes " + "SET Nome = ?, Sobrenome = ?, Telefone = ? " + "WHERE Id = ?");
+
+			st.setString(1, obj.getNome());
+			st.setString(2, obj.getSobrenome());
+			st.setString(3, obj.getTelefone());
+			st.setInt(4, obj.getId());
+
+			st.executeUpdate();
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+		}
 	}
 
 	@Override
-	public void deleteyId(Clientes obj) {
-		// TODO Auto-generated method stub
-		
+	public void deleteyId(Integer id) {
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement("DELETE FROM clientes WHERE Id = ?");
+
+			st.setInt(1, id);
+
+			st.executeUpdate();
+		} catch (SQLException e) {
+			throw new DbIntegrityException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+		}
 	}
 
 	@Override
 	public Clientes findById(Integer id) {
-		return null;		
-		
+		return null;
+
 	}
 
 	@Override
@@ -84,8 +104,7 @@ public class ClientesDaoJDBC implements ClientesDao {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
-			st = conn.prepareStatement(
-				"SELECT * FROM clientes ORDER BY Nome");
+			st = conn.prepareStatement("SELECT * FROM clientes ORDER BY Nome");
 			rs = st.executeQuery();
 
 			List<Clientes> list = new ArrayList<>();
@@ -99,16 +118,12 @@ public class ClientesDaoJDBC implements ClientesDao {
 				list.add(obj);
 			}
 			return list;
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
-		}
-		finally {
+		} finally {
 			DB.closeStatement(st);
 			DB.closeResultSet(rs);
 		}
 	}
-	
-	
-	
+
 }

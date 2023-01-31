@@ -1,7 +1,6 @@
 package gui;
 
 import java.net.URL;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +10,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import DB.DB;
 import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Constraints;
@@ -27,8 +25,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import model.Clientes;
-import model.dao.ClientesDao;
-import model.dao.DaoFactory;
 import model.exceptions.ValidationException;
 import service.ClientesService;
 
@@ -39,6 +35,9 @@ public class CadastroClienteController implements Initializable {
 	private ClientesService service;
 	
 	private List<DataChangeListener> dataChangeListeners = new ArrayList<>();
+	
+	@FXML
+	private TextField txtId;
 
 	@FXML
 	private TextField txtNome;
@@ -88,12 +87,10 @@ public class CadastroClienteController implements Initializable {
 
 	@FXML
 	public void onBtCadastrarAction(ActionEvent event) {
-		Connection conn = DB.getConnection();
-		ClientesDao clientesDao = DaoFactory.createClienteDao();
-
+		
 		try {
 			novoCliente = getFormData();
-			clientesDao.insert(novoCliente);
+			service.saveOrUpdate(novoCliente);
 			Alerts.showAlert("Confirmação", null, "Cadastro concluído com sucesso!", AlertType.CONFIRMATION);
 			notifyDataChangeListeners();
 			Utils.currentStage(event).close();
@@ -117,10 +114,11 @@ public class CadastroClienteController implements Initializable {
 		Clientes obj = new Clientes();
 
 		ValidationException exception = new ValidationException("Validation error");
-
+		
+		obj.setId(Utils.tryParseToInt(txtId.getText()));
 		obj.setNome(txtNome.getText());
 		obj.setSobrenome(txtSobrenome.getText());		
-	//	obj.setTelefone(Integer.parseInt(txtTelefone.getText()));		
+			
 		
 		String str = txtTelefone.getText();
 		Pattern p = Pattern.compile("[0-9]+");
@@ -133,7 +131,7 @@ public class CadastroClienteController implements Initializable {
 		String x = numeroTelefone.toString();
 		obj.setTelefone(x);
  
-		obj.getId();
+		obj.setId(Utils.tryParseToInt(txtId.getText()));
 
 		if (txtNome.getText() == null || txtNome.getText().trim().equals("")) {
 			exception.addError("nome", "Campos obrigatórios não preenchidos.");
@@ -180,6 +178,7 @@ public class CadastroClienteController implements Initializable {
 	}
 
 	private void initializeNodes() {
+		Constraints.setTextFieldInteger(txtId);
 		Constraints.setTextFieldMaxLength(txtNome, 100);
 		Constraints.setTextFieldMaxLength(txtSobrenome, 100);
 		Constraints.restrictLettersOnly(txtNome);
@@ -200,6 +199,16 @@ public class CadastroClienteController implements Initializable {
 		if (fields.contains("telefone")) {
 			labelErrorTelefone.setText(errors.get("telefone"));
 		}		
+	}
+	
+	public void updateFormData() {
+		if (novoCliente == null) {
+			throw new IllegalStateException("Entity was null");
+		}
+		txtId.setText(String.valueOf(novoCliente.getId()));
+		txtNome.setText(novoCliente.getNome());
+		txtSobrenome.setText(novoCliente.getSobrenome());
+		txtTelefone.setText(novoCliente.getTelefone());
 	}
 
 }

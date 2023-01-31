@@ -1,6 +1,5 @@
 package service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import model.Clientes;
@@ -25,4 +24,8 @@ public class ClientesService {
 			dao.update(obj);
 		}
 	}	
+	
+	public void remove(Clientes obj) {
+		dao.deleteyId(obj.getId());
+	}
 }

@@ -50,5 +50,6 @@
             </HBox>
          </children>
       </GridPane>
+      <TextField fx:id="txtId" disable="true" editable="false" layoutX="110.0" layoutY="2.0" opacity="0.0" />
    </children>
 </AnchorPane>
