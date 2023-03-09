@@ -10,10 +10,10 @@
 🛠️ Menu <br>
 ⚠️ Realizar pedido <br>
 
-### Tecnologias Utilizadas:
+### ⚙️ Tecnologias:
 ![JAVA](https://img.shields.io/badge/-JAVA-0D1117?style=for-the-badge&logo=java&logoColor=1572B6&labelColor=0D1117)&nbsp;
-![MYSQL](https://img.shields.io/badge/-MYSQL-0D1117?style=for-the-badge&logo=mysql&labelColor=0D1117)&nbsp;
-![JAVAFX](https://img.shields.io/badge/-JAVAFX-0D1117?style=for-the-badge&logo=mysql&labelColor=0D1117)&nbsp;
+![MYSQL](https://img.shields.io/badge/-MYSQL-0D1117?style=for-the-badge&logo=java&logoColor=1572B6&labelColor=0D1117)&nbsp;
+![JAVAFX](https://img.shields.io/badge/-JAVAFX-0D1117?style=for-the-badge&logo=java&logoColor=1572B6&labelColor=0D1117)&nbsp;
 
 ### Entre em contato:
 [![Linkedin Badge](https://img.shields.io/badge/-Thais-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/thaisreisiviera/)](https://www.linkedin.com/in/thaisreisiviera/)
