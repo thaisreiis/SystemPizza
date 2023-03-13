@@ -2,6 +2,8 @@ package model.dao;
 
 import DB.DB;
 import model.dao.impl.ClientesDaoJDBC;
+import model.dao.impl.IngredientesDaoJDBC;
+import model.dao.impl.SaboresDaoJDBC;
 
 public class DaoFactory {
 
@@ -12,4 +14,11 @@ public class DaoFactory {
 		return new ClientesDaoJDBC(DB.getConnection());
 	}
 	
+	public static IngredientesDao createIngredientesDao() {
+		return new IngredientesDaoJDBC(DB.getConnection());
+	}	
+	
+	public static SaboresDao createSaboressDao() {
+		return new SaboresDaoJDBC(DB.getConnection());
+	}	
 }

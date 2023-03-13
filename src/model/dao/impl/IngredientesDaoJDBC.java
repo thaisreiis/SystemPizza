@@ -11,34 +11,29 @@ import java.util.List;
 import DB.DB;
 import DB.DbException;
 import DB.DbIntegrityException;
-import model.Clientes;
-import model.dao.ClientesDao;
+import model.Ingredientes;
+import model.dao.IngredientesDao;
 
-public class ClientesDaoJDBC implements ClientesDao {
-
-	// Os dois codigos abaixo é para criar a conexao com o banco de dados só
-	// chamando o CONN:
-
+public class IngredientesDaoJDBC implements IngredientesDao {
+	
 	private Connection conn;
 
-	public ClientesDaoJDBC(Connection conn) {
+	public IngredientesDaoJDBC(Connection conn) {
 		this.conn = conn;
 	}
 
 	@Override
-	public void insert(Clientes obj) {
+	public void insert(Ingredientes obj) {
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement(
-					"INSERT INTO clientes " 
-					+ "(Nome, Sobrenome, Telefone) " 
-					+ "VALUES " 
-					+ "(?, ?, ?)",
+					"INSERT INTO ingredientes " 
+					 + "(Nome) " 
+					 + "VALUES " 
+					 + "(?)",
 					Statement.RETURN_GENERATED_KEYS);
 
-			st.setString(1, obj.getNome());
-			st.setString(2, obj.getSobrenome());
-			st.setString(3, obj.getTelefone());
+			st.setString(1, obj.getNomeIngrediente());
 
 			int rowsAffected = st.executeUpdate();
 
@@ -60,34 +55,28 @@ public class ClientesDaoJDBC implements ClientesDao {
 	}
 
 	@Override
-	public void update(Clientes obj) {
-
+	public void update(Ingredientes obj) {
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement(
-					"UPDATE clientes " 
-			         + "SET Nome = ?, Sobrenome = ?, Telefone = ? " 
-					 + "WHERE Id = ?"
-			         );
+					"UPDATE ingredientes " + "SET Nome = ?" + "WHERE Id = ?");
 
-			st.setString(1, obj.getNome());
-			st.setString(2, obj.getSobrenome());
-			st.setString(3, obj.getTelefone());
-			st.setInt(4, obj.getId());
+			st.setString(1, obj.getNomeIngrediente());
+			st.setInt(2, obj.getId());
 
 			st.executeUpdate();
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
 		} finally {
 			DB.closeStatement(st);
-		}
+		}	
 	}
 
 	@Override
 	public void deleteyId(Integer id) {
 		PreparedStatement st = null;
 		try {
-			st = conn.prepareStatement("DELETE FROM clientes WHERE Id = ?");
+			st = conn.prepareStatement("DELETE FROM ingredientes WHERE Id = ?");
 
 			st.setInt(1, id);
 
@@ -97,26 +86,24 @@ public class ClientesDaoJDBC implements ClientesDao {
 		} finally {
 			DB.closeStatement(st);
 		}
+		
 	}
 
-	
 
 	@Override
-	public List<Clientes> findAll() {
+	public List<Ingredientes> findAll() {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
-			st = conn.prepareStatement("SELECT * FROM clientes ORDER BY Nome");
+			st = conn.prepareStatement("SELECT * FROM ingredientes ORDER BY Nome");
 			rs = st.executeQuery();
 
-			List<Clientes> list = new ArrayList<>();
+			List<Ingredientes> list = new ArrayList<>();
 
 			while (rs.next()) {
-				Clientes obj = new Clientes();
+				Ingredientes obj = new Ingredientes();
 				obj.setId(rs.getInt("Id"));
-				obj.setNome(rs.getString("Nome"));
-				obj.setSobrenome(rs.getString("Sobrenome"));
-				obj.setTelefone(rs.getString("Telefone"));
+				obj.setNomeIngrediente(rs.getString("Nome"));
 				list.add(obj);
 			}
 			return list;

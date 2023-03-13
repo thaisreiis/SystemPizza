@@ -28,13 +28,13 @@ public class Constraints {
 		    });
 	}
 	
-	public static void restrictLettersOnly(TextField txt) {
+	/*public static void restrictLettersOnly(TextField txt) {
 		txt.textProperty().addListener((observable, oldValue, newValue) -> {
 	        if (!newValue.matches("\\sa-zA-Z*")) {
 	            txt.setText(newValue.replaceAll("[^\\sa-zA-Z]", ""));
 	        }
 	    });
-    }
+    }*/
 
 	
 	

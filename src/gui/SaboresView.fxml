@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="361.0" prefWidth="766.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SaboresController">
+   <children>
+      <Button fx:id="btNovoSabor" layoutX="14.0" layoutY="35.0" mnemonicParsing="false" onAction="#onBtNovoSaborAction" prefHeight="25.0" prefWidth="127.0" text="Cadastrar Sabor" />
+      <TextField fx:id="txtPesquisar" layoutX="172.0" layoutY="35.0" prefHeight="25.0" prefWidth="475.0" promptText="pesquisar" />
+      <TableView fx:id="tableViewSabores" layoutX="14.0" layoutY="75.0" prefHeight="260.0" prefWidth="751.0">
+        <columns>
+          <TableColumn fx:id="tableColumnNome" prefWidth="91.0" text="Nome" />
+            <TableColumn fx:id="tableColumnIngrediente1" prefWidth="102.0" />
+            <TableColumn fx:id="tableColumnIngrediente2" prefWidth="108.0" />
+            <TableColumn fx:id="tableColumnIngrediente3" prefWidth="109.0" />
+            <TableColumn fx:id="tableColumnIngrediente4" prefWidth="105.0" />
+            <TableColumn fx:id="tableColumnIngrediente5" prefWidth="110.0" />
+            <TableColumn fx:id="tableColumnEDIT" prefWidth="62.0" />
+            <TableColumn fx:id="tableColumnREMOVE" prefWidth="63.0" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>

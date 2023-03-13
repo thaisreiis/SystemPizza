@@ -11,7 +11,6 @@ public interface ClientesDao {
 	void insert(Clientes obj); //inserir no banco de dados
 	void update(Clientes obj);
 	void deleteyId(Integer id); 
-	Clientes findById(Integer id); //consultar no banco de dados
 	List<Clientes> findAll(); // retornar todos os clientes
 	
 }

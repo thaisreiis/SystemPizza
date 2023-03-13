@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.gluonhq.charm.glisten.control.Icon?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="505.0" prefWidth="736.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MenuController">
+   <content>
+      <AnchorPane prefHeight="476.0" prefWidth="745.0">
+         <children>
+            <TableView fx:id="tableViewClientes" layoutX="205.0" layoutY="127.0" prefHeight="368.0" prefWidth="522.0" stylesheets="@../css/style.css">
+              <columns>
+                <TableColumn fx:id="tableColumnNome" prefWidth="147.0" text="NOME DO CLIENTE" />
+                <TableColumn fx:id="tableColumnTelefone" prefWidth="113.0" text="TELEFONE" />
+                  <TableColumn fx:id="tableColumnSituacao" prefWidth="265.0" text="SITUAÇÃO" />
+              </columns>
+            </TableView>
+            <TextField fx:id="txPesquisar" layoutX="205.0" layoutY="101.0" prefHeight="26.0" prefWidth="510.0" promptText="pesquisar cliente" />
+            <VBox layoutX="-5.0" layoutY="-3.0" prefHeight="505.0" prefWidth="211.0" style="-fx-background-color: #3F2B63;">
+               <children>
+                  <Pane prefHeight="119.0" prefWidth="211.0">
+                     <children>
+                        <ImageView fitHeight="119.0" fitWidth="224.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../../Users/User/Downloads/PizzariaSystem.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </Pane>
+                  <Button fx:id="btNovoPedido" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onAction="#onBtNovoPedido" prefHeight="46.0" prefWidth="213.0" stylesheets="@../css/style.css" text="Novo Pedido" textFill="WHITE">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <padding>
+                        <Insets left="39.0" />
+                     </padding>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <graphic>
+                        <Icon content="CREATE" />
+                     </graphic>
+                  </Button>
+                  <Button fx:id="btSabores" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onAction="#onBtSabores" prefHeight="46.0" prefWidth="244.0" stylesheets="@../css/style.css" text="Sabores" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <graphic>
+                        <Icon content="LAUNCH" />
+                     </graphic>
+                     <VBox.margin>
+                        <Insets left="-30.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="btIngredientes" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onAction="#onBtIngredientes" prefHeight="46.0" prefWidth="213.0" stylesheets="@../css/style.css" text="Ingredientes" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <graphic>
+                        <Icon content="EVENT_NOTE" />
+                     </graphic>
+                     <VBox.margin>
+                        <Insets left="-5.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="btClientes" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onAction="#onBtClientes" prefHeight="46.0" prefWidth="234.0" stylesheets="@../css/style.css" text="Clientes" textFill="WHITE">
+                     <padding>
+                        <Insets left="39.0" />
+                     </padding>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <graphic>
+                        <Icon content="PERSON" />
+                     </graphic>
+                     <VBox.margin>
+                        <Insets left="-30.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="btAjuda" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onAction="#onBtAjuda" prefHeight="46.0" prefWidth="267.0" stylesheets="@../css/style.css" text="Ajuda" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <graphic>
+                        <Icon content="HELP_OUTLINE" prefHeight="24.0" prefWidth="22.0" />
+                     </graphic>
+                     <VBox.margin>
+                        <Insets left="-45.0" />
+                     </VBox.margin>
+                  </Button>
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
+   </content>
+</ScrollPane>

@@ -75,8 +75,8 @@ public class Clientes implements Serializable {
 	public String toString() {
 		return "Cliente [id=" + id + ", nome=" + nome + ", sobrenome=" + sobrenome + ", telefone=" + telefone + "]";
 	}
-
-
+	
+	
 	
 	
 }

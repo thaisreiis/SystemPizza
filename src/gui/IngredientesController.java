@@ -32,100 +32,80 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import model.Clientes;
-import service.ClientesService;
+import model.Ingredientes;
+import service.IngredientesService;
 
-public class ClientesController implements Initializable, DataChangeListener {
-
-	//private Clientes clientes;
-
-	private ClientesService service = new ClientesService();
-
-	List<Clientes> list = service.findAll();
-
-	@FXML
-	private TableView<Clientes> tableViewClientes;
-
-	@FXML
-	private TableColumn<Clientes, String> tableColumnNome;
-
-	@FXML
-	private TableColumn<Clientes, String> tableColumnSobrenome;
-
-	@FXML
-	private TableColumn<Clientes, String> tableColumnTelefone;
-
-	@FXML
-	private TextField txtPesquisar;
-
-	@FXML
-	private Button btPesquisar;
-
-	@FXML
-	private TableColumn<Clientes, Clientes> tableColumnEDIT;
-
-	@FXML
-	private TableColumn<Clientes, Clientes> tableColumnREMOVE;
-
-	@FXML
-	private Button btNovoCliente;
-
-	private ObservableList<Clientes> obsList; // nesse obsList que vamos carregar os Clientes
-
-	@FXML
-	public void onBtNovoClienteAction(ActionEvent event) {
-		Stage parentStage = Utils.currentStage(event);
-		Clientes obj = new Clientes();
-		createDialogForm(obj, "/gui/CadastroCliente.fxml", parentStage);
-	}
-
-	public void setClientesService(ClientesService service) {
+public class IngredientesController implements Initializable, DataChangeListener {
+	
+	private ObservableList<Ingredientes> obsList;
+	
+	private IngredientesService service = new IngredientesService();
+	
+	public void setIngredientesService(IngredientesService service) {
 		this.service = service;
 	}
 
+	@FXML
+	private TableView<Ingredientes> tableViewIngredientes;
 
+	@FXML
+	private TableColumn<Ingredientes, String> tableColumnNome;
+	
+	@FXML
+	private TableColumn<Ingredientes, Ingredientes> tableColumnEDIT;
+
+	@FXML
+	private TableColumn<Ingredientes, Ingredientes> tableColumnREMOVE;
+	
+	@FXML
+	private TextField txtPesquisar;
+
+
+	@FXML
+	private Button btNovoIngrediente;
+
+	@FXML
+	public void onBtNovoIngredienteeAction(ActionEvent event) {
+		Stage parentStage = Utils.currentStage(event);
+		Ingredientes obj = new Ingredientes();
+		createDialogForm(obj, "/gui/CadastroIngredientesView.fxml", parentStage);
+	}
+	
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-		tableColumnNome.setCellValueFactory(new PropertyValueFactory<>("Nome"));
-		tableColumnSobrenome.setCellValueFactory(new PropertyValueFactory<>("Sobrenome"));
-		tableColumnTelefone.setCellValueFactory(new PropertyValueFactory<>("Telefone"));
-
+		tableColumnNome.setCellValueFactory(new PropertyValueFactory<>("nomeIngrediente"));
 		updateTableView();
-		searchClientes();
-
+		searchClientes();		
 	}
+	
 
-	// Metodo responsavel por acessar o serviço, carregar os Clientes e e jogar
-	// esses Clientes
-	// na minha obsList (ObservableList).Esse obsList vou associar com meu tableView
-	// e vai aparecer
-	// a lista de clientes lá.
-	public void updateTableView() {
+	private void updateTableView() {
 		if (service == null) {
 			throw new IllegalStateException("Service está nulo. Injetar o service.");
 		}
-		List<Clientes> list = service.findAll();
+		List<Ingredientes> list = service.findAll();
 		obsList = FXCollections.observableArrayList(list);
-		tableViewClientes.setItems(obsList);
+		tableViewIngredientes.setItems(obsList);
 		initEditButtons();
 		initRemoveButtons();
 		searchClientes();
+		
 	}
-
-	private void createDialogForm(Clientes obj, String absoluteName, Stage parentStage) {
+	
+	private void createDialogForm(Ingredientes obj, String absoluteName, Stage parentStage) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			Pane pane = loader.load();
 
-			CadastroClienteController controller = loader.getController();
-			controller.setClientes(obj);
-			controller.setClientesService(new ClientesService());
+			CadastroIngredientesController controller = loader.getController();
+			controller.setIngredientes(obj);
+			controller.setIngredienteService(new IngredientesService());
 			controller.subscribeDataChangeListener(this);
 			controller.updateFormData();
 			
 
 			Stage dialogStage = new Stage();
-			dialogStage.setTitle("Cadastro - cliente");
+			dialogStage.setTitle("Cadastro - ingrediente");
 			dialogStage.setScene(new Scene(pane));
 			dialogStage.setResizable(false);
 			dialogStage.initOwner(parentStage);
@@ -136,19 +116,19 @@ public class ClientesController implements Initializable, DataChangeListener {
 			Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), Alert.AlertType.ERROR);
 		}
 	}
-
+	
 	@Override
 	public void onDataChanged() {
 		updateTableView();
 
-	}
+	}	
 
 	private void searchClientes() {
-		FilteredList<Clientes> filteredData = new FilteredList<>(obsList, p -> true);
+		FilteredList<Ingredientes> filteredData = new FilteredList<>(obsList, p -> true);
 
 		// 2. Set the filter Predicate whenever the filter changes.
 		txtPesquisar.textProperty().addListener((observable, oldValue, newValue) -> {
-			filteredData.setPredicate(Clientes -> {
+			filteredData.setPredicate(Ingredientes -> {
 				// If filter text is empty, display all persons.
 				if (newValue == null || newValue.isEmpty()) {
 					return true;
@@ -157,34 +137,33 @@ public class ClientesController implements Initializable, DataChangeListener {
 				// Compare first name and last name field in your object with filter.
 				String lowerCaseFilter = newValue.toLowerCase();
 
-				if (String.valueOf(Clientes.getNome()).toLowerCase().contains(lowerCaseFilter)) {
+				if (String.valueOf(Ingredientes.getNomeIngrediente()).toLowerCase().contains(lowerCaseFilter)) {
 					return true;
 					// Filter matches first name.
+				} 
 
-				} else if (String.valueOf(Clientes.getSobrenome()).toLowerCase().contains(lowerCaseFilter)) {
-					return true; // Filter matches last name.
-				}
-
+				
 				return false; // Does not match.
 			});
 		});
 
 		// 3. Wrap the FilteredList in a SortedList.
-		SortedList<Clientes> sortedData = new SortedList<>(filteredData);
+		SortedList<Ingredientes> sortedData = new SortedList<>(filteredData);
 
 		// 4. Bind the SortedList comparator to the TableView comparator.
-		sortedData.comparatorProperty().bind(tableViewClientes.comparatorProperty());
+		sortedData.comparatorProperty().bind(tableViewIngredientes.comparatorProperty());
 		// 5. Add sorted (and filtered) data to the table.
-		tableViewClientes.setItems(sortedData);
+		tableViewIngredientes.setItems(sortedData);
+		
 	}
 
 	private void initEditButtons() {
 		tableColumnEDIT.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-		tableColumnEDIT.setCellFactory(param -> new TableCell<Clientes, Clientes>() {
+		tableColumnEDIT.setCellFactory(param -> new TableCell<Ingredientes, Ingredientes>() {
 			private final Button button = new Button("Editar");
 
 			@Override
-			protected void updateItem(Clientes obj, boolean empty) {
+			protected void updateItem(Ingredientes obj, boolean empty) {
 				super.updateItem(obj, empty);
 				if (obj == null) {
 					setGraphic(null);
@@ -192,18 +171,18 @@ public class ClientesController implements Initializable, DataChangeListener {
 				}
 				setGraphic(button);
 				button.setOnAction(
-						event -> createDialogForm(obj, "/gui/CadastroCliente.fxml", Utils.currentStage(event)));
+						event -> createDialogForm(obj, "/gui/CadastroIngredientesView.fxml", Utils.currentStage(event)));
 			}
 		});
 	}
 	
 	private void initRemoveButtons() {
 		tableColumnREMOVE.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-		tableColumnREMOVE.setCellFactory(param -> new TableCell<Clientes, Clientes>() {
+		tableColumnREMOVE.setCellFactory(param -> new TableCell<Ingredientes, Ingredientes>() {
 			private final Button button = new Button("Excluir");
 
 			@Override
-			protected void updateItem(Clientes obj, boolean empty) {
+			protected void updateItem(Ingredientes obj, boolean empty) {
 				super.updateItem(obj, empty);
 				if (obj == null) {
 					setGraphic(null);
@@ -215,8 +194,8 @@ public class ClientesController implements Initializable, DataChangeListener {
 		});
 	}
 
-	private void removeEntity(Clientes obj) {
-		Optional<ButtonType> result = Alerts.showConfirmation("Confirmação", "Você tem certeza que deseja cancelar?");
+	private void removeEntity(Ingredientes obj) {
+		Optional<ButtonType> result = Alerts.showConfirmation("Confirmação", "Você tem certeza que deseja excluir?");
 		
 		if (result.get() == ButtonType.OK) {
 			if (service == null) {
@@ -230,5 +209,6 @@ public class ClientesController implements Initializable, DataChangeListener {
 		}
 		}
 	}
-
+	
+	
 }

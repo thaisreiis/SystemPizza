@@ -69,7 +69,7 @@ public class CadastroClienteController implements Initializable {
 		tff.setMask("(##)#####-####");
 		tff.setCaracteresValidos("0123456789");
 		tff.setTf(txtTelefone);
-		tff.formatter();
+		tff.formatter();		
 	}
 	
 	public void setClientes(Clientes novoCliente) {
@@ -114,6 +114,7 @@ public class CadastroClienteController implements Initializable {
 		Clientes obj = new Clientes();
 
 		ValidationException exception = new ValidationException("Validation error");
+		
 		
 		obj.setId(Utils.tryParseToInt(txtId.getText()));
 		obj.setNome(txtNome.getText());
@@ -181,8 +182,8 @@ public class CadastroClienteController implements Initializable {
 		Constraints.setTextFieldInteger(txtId);
 		Constraints.setTextFieldMaxLength(txtNome, 100);
 		Constraints.setTextFieldMaxLength(txtSobrenome, 100);
-		Constraints.restrictLettersOnly(txtNome);
-		Constraints.restrictLettersOnly(txtSobrenome);
+		tfTelefone();
+		
 	}
 
 	private void setErrorMessages(Map<String, String> errors) {
